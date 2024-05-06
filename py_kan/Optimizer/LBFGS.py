@@ -2,6 +2,8 @@ import torch
 from functools import reduce
 from torch.optim import Optimizer
 
+from py_kan.Method.LBFGS import strong_wolfe
+
 class LBFGS(Optimizer):
     """Implements L-BFGS algorithm.
 
@@ -250,7 +252,7 @@ class LBFGS(Optimizer):
                     def obj_func(x, t, d):
                         return self._directional_evaluate(closure, x, t, d)
 
-                    loss, flat_grad, t, ls_func_evals = _strong_wolfe(
+                    loss, flat_grad, t, ls_func_evals = strong_wolfe(
                         obj_func, x_init, t, d, loss, flat_grad, gtd)
                 self._add_grad(t, d)
                 opt_cond = flat_grad.abs().max() <= tolerance_grad
